@@ -18,7 +18,9 @@ public class Main {
 
 //        userDaoJDBC.removeUserById(12);
 
-        userDaoJDBC.cleanUsersTable();
+        System.out.println(userDaoJDBC.getAllUsers());
+
+
 
 
 

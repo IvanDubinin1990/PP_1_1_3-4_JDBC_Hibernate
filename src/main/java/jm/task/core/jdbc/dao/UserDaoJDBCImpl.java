@@ -58,7 +58,7 @@ public class UserDaoJDBCImpl implements UserDao {
         List<User> userList = new ArrayList<>();
 
         try (Statement statement = connection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery("SELECT id, name, lastName, age FROM mynewdb.test1");
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM mynewdb.test1");
 
             while (resultSet.next()) {
                 User user = new User();
@@ -83,7 +83,6 @@ public class UserDaoJDBCImpl implements UserDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
     }
 }
 
