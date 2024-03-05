@@ -19,8 +19,6 @@ public class Util {
     private static final String userPassword = "bestuser";
     private static final String connectionURL = "jdbc:mysql://localhost:3306/mynewdb";
 
-    private static SessionFactory sessionFactory;
-
     public static Connection getConnection() {
         Connection connection = null;
         try {
@@ -32,32 +30,28 @@ public class Util {
     }
 
     public static SessionFactory getSessionFactory() {
+        SessionFactory sessionFactory = null;
+        try {
+            Configuration configuration = new Configuration();
+            Properties myProperties = new Properties();
 
-        if (sessionFactory == null) {
-            try {
-                Configuration configuration = new Configuration();
-                Properties myProperties = new Properties();
+            myProperties.put(Environment.USER, userName);
+            myProperties.put(Environment.PASS, userPassword);
+            myProperties.put(Environment.URL, connectionURL);
+            myProperties.put(Environment.DRIVER, "com.mysql.cj.jdbc.Driver");
+            myProperties.put(Environment.DIALECT, "org.hibernate.dialect.MySQL5Dialect");
+            myProperties.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
 
-                myProperties.put(Environment.USER, userName);
-                myProperties.put(Environment.PASS, userPassword);
-                myProperties.put(Environment.URL, connectionURL);
-                myProperties.put(Environment.DRIVER, "com.mysql.cj.jdbc.Driver");
-                myProperties.put(Environment.DIALECT, "org.hibernate.dialect.MySQL5Dialect");
-                myProperties.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
+            configuration.setProperties(myProperties);
+            configuration.addAnnotatedClass(User.class);
 
+            ServiceRegistry builder =
+                    new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
 
-                configuration.setProperties(myProperties);
-                configuration.addAnnotatedClass(User.class);
+            sessionFactory = configuration.buildSessionFactory(builder);
 
-                ServiceRegistry builder =
-                        new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
-
-                sessionFactory = configuration.buildSessionFactory(builder);
-
-            } catch (Exception e) {
-                System.out.println("Исключение " + e);
-            }
-
+        } catch (Exception e) {
+            System.out.println("Исключение " + e);
         }
         return sessionFactory;
     }
